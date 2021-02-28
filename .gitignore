@@ -1,0 +1,10 @@
+.vscode
+# node.js
+#
+.env
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# lock
+yarn.lock
