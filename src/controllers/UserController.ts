@@ -1,5 +1,5 @@
 import User from '../sqlz/models/user.model';
-import { Router, Request, Response, NextFunction } from 'express';
+import {Request, Response,  } from 'express';
 
 const userController = {
   index: async (req: Request, res: Response) => {
