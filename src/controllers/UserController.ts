@@ -1,20 +1,26 @@
-import User from '../sqlz/models/user.model';
 import { Request, Response } from 'express';
+import User from '../sqlz/models/user.model';
 
-const UserController = {
-  index: async (req: Request, res: Response) => {
-    const data = await User.findAll();
-    res.send(data);
-  },
-  show: async (req: Request, res: Response) => {
+export default class UserController {
+  public async index(req: Request, res: Response) {
+    try {
+      const data = await User.findAll();
+      res.send(data);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  }
+
+  public async show(req: Request, res: Response) {
     const data = await User.findByPk(req.params.id);
     if (data) {
       res.send(data);
       return;
     }
     res.status(400).send({ message: 'Not found' });
-  },
-  update: async (req: Request, res: Response) => {
+  }
+
+  public async update(req: Request, res: Response) {
     const param = {
       name: req.body.name,
       email: req.body.email,
@@ -28,8 +34,9 @@ const UserController = {
       });
     }
     res.status(400).send({ message: 'Not found' });
-  },
-  destroy: async (req: Request, res: Response) => {
+  }
+
+  public async destroy(req: Request, res: Response) {
     const user = await User.findByPk(req.params.id);
     if (user) {
       user.destroy();
@@ -38,7 +45,5 @@ const UserController = {
       });
     }
     res.status(400).send({ message: 'Not found' });
-  },
-};
-
-export default UserController;
+  }
+}

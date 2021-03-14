@@ -1,11 +1,21 @@
 import { Router } from 'express';
 import UserController from '../../controllers/UserController';
 
-const UserRoutes = Router();
+export default class UserRoutes {
+    router: Router;
+    private controller: UserController;
 
-UserRoutes.get('/users', UserController.index);
-UserRoutes.get('/users/:id', UserController.show);
-UserRoutes.put('/users/:id', UserController.update);
-UserRoutes.delete('/users/:id', UserController.destroy);
+    constructor() {
+        this.router = Router();
+        this.controller = new UserController();
 
-export default UserRoutes;
+        this.init();
+    }
+
+    init(): void {
+        this.router.get('/users', this.controller.index);
+        this.router.get('/users/:id', this.controller.show);
+        this.router.put('/users/:id', this.controller.update);
+        this.router.delete('/users/:id', this.controller.destroy);
+    }
+}
