@@ -1,5 +1,6 @@
 import User from '../sqlz/models/user.model';
 import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
 
 const UserController = {
   index: async (req: Request, res: Response) => {
@@ -14,6 +15,24 @@ const UserController = {
     }
     res.status(400).send({ message: 'Not found' });
   },
+  store: async (req: Request, res: Response) => {
+    if (validationResult(req).array().length > 0) {
+      res.status(400).json(validationResult(req).array());
+      return;
+    }
+    const param = {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    };
+    const user = await User.create({
+      ...param,
+    });
+    res.send({
+      message: 'create success',
+      user,
+    });
+  },
   update: async (req: Request, res: Response) => {
     const param = {
       name: req.body.name,
@@ -25,6 +44,7 @@ const UserController = {
       user.update(param);
       res.send({
         message: 'update success',
+        user,
       });
     }
     res.status(400).send({ message: 'Not found' });
