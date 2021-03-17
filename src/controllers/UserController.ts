@@ -1,13 +1,18 @@
-import User from '../sqlz/models/user.model';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import User from '../sqlz/models/user.model';
 
 const UserController = {
-  index: async (req: Request, res: Response) => {
-    const data = await User.findAll();
-    res.send(data);
+  async index(req: Request, res: Response) {
+    try {
+      const data = await User.findAll();
+      res.send(data);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
   },
-  show: async (req: Request, res: Response) => {
+
+  async show(req: Request, res: Response) {
     const data = await User.findByPk(req.params.id);
     if (data) {
       res.send(data);
@@ -15,7 +20,8 @@ const UserController = {
     }
     res.status(400).send({ message: 'Not found' });
   },
-  store: async (req: Request, res: Response) => {
+
+  async store(req: Request, res: Response) {
     if (validationResult(req).array().length > 0) {
       res.status(400).json(validationResult(req).array());
       return;
@@ -33,7 +39,8 @@ const UserController = {
       user,
     });
   },
-  update: async (req: Request, res: Response) => {
+
+  async update(req: Request, res: Response) {
     const param = {
       name: req.body.name,
       email: req.body.email,
@@ -49,7 +56,8 @@ const UserController = {
     }
     res.status(400).send({ message: 'Not found' });
   },
-  destroy: async (req: Request, res: Response) => {
+
+  async destroy(req: Request, res: Response) {
     const user = await User.findByPk(req.params.id);
     if (user) {
       user.destroy();
@@ -60,5 +68,4 @@ const UserController = {
     res.status(400).send({ message: 'Not found' });
   },
 };
-
 export default UserController;

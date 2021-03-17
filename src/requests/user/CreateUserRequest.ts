@@ -1,6 +1,7 @@
 import { checkSchema } from 'express-validator';
 import { Op } from 'sequelize';
 import User from '../../sqlz/models/user.model';
+
 const CreateUserRequest = checkSchema({
   password: {
     isLength: {
