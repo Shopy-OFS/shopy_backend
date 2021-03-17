@@ -28,20 +28,22 @@ const CreateUserRequest = checkSchema({
       options: { max: 100, min: 7 },
     },
     custom: {
-      options: async (value, { req }) => {
-        const user = await User.findAll({
-          where: {
-            email: {
-              [Op.ne]: value,
+      options: (value, { req }) => {
+        return new Promise(async (resolve, reject) => {
+          const user = await User.findAll({
+            where: {
+              email: {
+                [Op.eq]: value,
+              },
             },
-          },
+          });
+          if (user.length > 0) {
+            reject(new Error('Email already exists.'));
+          } else {
+            resolve(true);
+          }
         });
-        if (user) {
-          return true;
-        }
-        return false;
       },
-      errorMessage: 'Email is exist ',
     },
   },
 });
