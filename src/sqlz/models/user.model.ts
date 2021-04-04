@@ -1,5 +1,10 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, DefaultScope } from 'sequelize-typescript';
 
+@DefaultScope(() => ({
+  attributes: {
+    exclude: ['password', 'createdAt', 'updatedAt'],
+  },
+}))
 @Table({
   tableName: 'users',
   timestamps: true,
