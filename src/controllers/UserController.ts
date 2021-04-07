@@ -1,29 +1,30 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { sendError, sendSuccess } from '../helpers/ResponseApi';
 import User from '../sqlz/models/user.model';
 
 const UserController = {
   async index(req: Request, res: Response) {
     try {
-      const data = await User.findAll();
-      res.send(data);
+      const users = await User.findAll();
+      sendSuccess(res, null, { users });
     } catch (error) {
-      res.status(500).send(error.message);
+      sendError(res, 500, error.message, { error });
     }
   },
 
   async show(req: Request, res: Response) {
-    const data = await User.findByPk(req.params.id);
-    if (data) {
-      res.send(data);
+    const user = await User.findByPk(req.params.id);
+    if (user) {
+      sendSuccess(res, null, { user });
       return;
     }
-    res.status(400).send({ message: 'Not found' });
+    sendError(res, 404, 'Not found', null);
   },
 
   async store(req: Request, res: Response) {
     if (validationResult(req).array().length > 0) {
-      res.status(400).json(validationResult(req).array());
+      sendError(res, 400, 'Bad request', validationResult(req).array());
       return;
     }
     const param = {
@@ -34,10 +35,7 @@ const UserController = {
     const user = await User.create({
       ...param,
     });
-    res.send({
-      message: 'create success',
-      user,
-    });
+    sendSuccess(res, 'create success', { user });
   },
 
   async update(req: Request, res: Response) {
@@ -49,23 +47,18 @@ const UserController = {
     const user = await User.findByPk(req.params.id);
     if (user) {
       user.update(param);
-      res.send({
-        message: 'update success',
-        user,
-      });
+      sendSuccess(res, 'update success', { user });
     }
-    res.status(400).send({ message: 'Not found' });
+    sendError(res, 400, 'Not found', null);
   },
 
   async destroy(req: Request, res: Response) {
     const user = await User.findByPk(req.params.id);
     if (user) {
       user.destroy();
-      res.send({
-        message: 'delete success',
-      });
+      sendSuccess(res, 'delete success', null);
     }
-    res.status(400).send({ message: 'Not found' });
+    sendError(res, 400, 'Not found', null);
   },
 };
 export default UserController;
