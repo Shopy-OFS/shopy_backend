@@ -8,4 +8,5 @@ UserRoutes.get('/users/:id', UserController.show);
 UserRoutes.post('/users', CreateUserRequest, UserController.store);
 UserRoutes.put('/users/:id', UserController.update);
 UserRoutes.delete('/users/:id', UserController.destroy);
+
 export { UserRoutes };
