@@ -18,11 +18,11 @@ const AuthenticationController = {
       const token = jwt.sign(
         { username: adminUser.email, id: adminUser.id, full_name: adminUser.full_name },
         auth.accessTokenSecret,
-        { expiresIn: 60 * 60 }
+        { expiresIn: '1y' }
       );
-      sendSuccess(res, 'login success', { token });
+      sendSuccess(res, 'Login success', { token });
     }
-    sendError(res, 401, 'invalid email or password', null);
+    sendError(res, 401, 'Invalid email or password', null);
   },
 };
 export default AuthenticationController;
