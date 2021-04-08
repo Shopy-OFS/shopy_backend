@@ -19,12 +19,16 @@ module.exports = {
           type: DataTypes.STRING,
         },
         createdAt: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.DATE,
         },
         updatedAt: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.DATE,
+        },
+        deletedAt: {
+          allowNull: true,
+          type: Sequelize.DATE,
         },
       },
       {

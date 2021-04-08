@@ -1,20 +1,18 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('admin_users', {
+    await queryInterface.createTable('oauth_access_tokens', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      full_name: {
         type: Sequelize.STRING,
       },
-      email: {
+      user_id: {
         type: Sequelize.STRING,
       },
-      password: {
+      scope: {
         type: Sequelize.STRING,
+      },
+      revoked: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: true,
@@ -28,9 +26,13 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
       },
+      expires_at: {
+        allowNull: true,
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('admin_users');
+    await queryInterface.dropTable('oauth_access_tokens');
   },
 };
