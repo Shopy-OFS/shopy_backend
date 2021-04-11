@@ -4,7 +4,8 @@ import authenticateAdminJWT from '../../middleware/CheckAdminAuthenicate';
 import CreateUserRequest from '../../requests/user/CreateUserRequest';
 
 const UserRoutes = Router();
-UserRoutes.get('/users', authenticateAdminJWT, UserController.index);
+UserRoutes.use('/users', [authenticateAdminJWT]);
+UserRoutes.get('/users', UserController.index);
 UserRoutes.get('/users/:id', UserController.show);
 UserRoutes.post('/users', CreateUserRequest, UserController.store);
 UserRoutes.put('/users/:id', UserController.update);
