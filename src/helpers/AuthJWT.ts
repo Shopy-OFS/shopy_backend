@@ -14,4 +14,5 @@ const AuthAdminUser = async (req: Request) => {
   }
   return null;
 };
+// eslint-disable-next-line import/prefer-default-export
 export { AuthAdminUser };
