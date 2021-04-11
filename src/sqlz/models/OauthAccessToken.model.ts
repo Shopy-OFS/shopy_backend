@@ -16,8 +16,8 @@ export default class OauthAccessToken extends Model {
   @Column(DataType.STRING)
   scope!: string;
 
-  @Column(DataType.STRING)
-  revoked!: string;
+  @Column(DataType.BOOLEAN)
+  revoked!: boolean;
 
   @Column(DataType.DATE)
   createdAt?: Date;
