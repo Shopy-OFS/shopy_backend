@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import moment from 'moment';
 import { auth } from '../config/app';
 import { sendError } from '../helpers/ResponseApi';
 import OauthAccessToken from '../sqlz/models/OauthAccessToken.model';
 
 // eslint-disable-next-line consistent-return
-const authenticateAdminJWT = (req: Request, res: Response, next: Function) => {
+const authenticateAdminScopeJWT = (req: Request, res: Response, next: Function) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
@@ -19,8 +18,10 @@ const authenticateAdminJWT = (req: Request, res: Response, next: Function) => {
       }
       const oauthAccessToken = await OauthAccessToken.findByPk(token);
       if (oauthAccessToken) {
-        if (moment(moment().format('YYYY-MM-DD hh:mm')).isAfter(oauthAccessToken.expires_at) === true) {
-          return sendError(res, 401, 'Invalid token', null);
+        const { scope } = oauthAccessToken;
+        const scopeDecode: string[] = JSON.parse(scope);
+        if (!scopeDecode.includes(auth.scope.admin)) {
+          return sendError(res, 403, 'Invalid scope', null);
         }
         return next();
       }
@@ -29,4 +30,4 @@ const authenticateAdminJWT = (req: Request, res: Response, next: Function) => {
     return sendError(res, 401, 'Invalid token', null);
   }
 };
-export default authenticateAdminJWT;
+export default authenticateAdminScopeJWT;
