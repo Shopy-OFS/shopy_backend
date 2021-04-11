@@ -36,13 +36,28 @@ const AuthenticationController = {
         id: token,
         user_id: adminUser.id,
         scope: JSON.stringify([auth.scope.admin]),
-        revoked: 0,
+        revoked: false,
         expires_at: expireDate,
       });
 
       return sendSuccess(res, 'Login success', { token });
     }
     return sendError(res, 401, 'Invalid email or password', null);
+  },
+  async logout(req: Request, res: Response) {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      const oauthAccessToken = await OauthAccessToken.findByPk(token);
+      if (oauthAccessToken) {
+        oauthAccessToken.update({
+          revoked: true,
+        });
+        return sendSuccess(res, 'logout success success', null);
+      }
+      return sendError(res, 401, 'Invalid token', null);
+    }
+    return sendError(res, 401, 'Invalid token', null);
   },
 };
 export default AuthenticationController;
