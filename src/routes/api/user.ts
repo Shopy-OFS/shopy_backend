@@ -13,5 +13,4 @@ UserRoutes.post('/users', CreateUserRequest, UserController.store);
 UserRoutes.put('/users/:id', UpdateUserRequest, UserController.update);
 UserRoutes.delete('/users/:id', UserController.destroy);
 
-// eslint-disable-next-line import/prefer-default-export
 export { UserRoutes };

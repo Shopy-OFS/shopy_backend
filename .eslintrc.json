@@ -16,7 +16,9 @@
     },
     "rules": {
       "prettier/prettier": "error",
-      "import/extensions": "off"
+      "import/extensions": "off",
+      "comma-dangle": ["off", "never"],
+      "import/prefer-default-export": "off"
     },
     "settings": {
       "import/resolver": {

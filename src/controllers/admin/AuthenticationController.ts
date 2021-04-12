@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
-// eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
+import jwtDecodeLib from 'jwt-decode';
 import { sendError, sendSuccess } from '../../helpers/ResponseApi';
 import { auth } from '../../config/app';
 import AdminUser from '../../sqlz/models/AdminUser.model';
@@ -24,13 +23,8 @@ const AuthenticationController = {
         full_name: adminUser.full_name,
         scope: JSON.stringify([auth.scope.admin]),
       };
-      const token = jwt.sign(
-        tokenPayload,
-        auth.accessTokenSecret,
-        // eslint-disable-next-line comma-dangle
-        { expiresIn: '31556952000' }
-      );
-      const jwtDecode: any = jwt_decode(token);
+      const token = jwt.sign(tokenPayload, auth.accessTokenSecret, { expiresIn: '31556952000' });
+      const jwtDecode: any = jwtDecodeLib(token);
       const expireDate = moment(jwtDecode.exp * 1000).format('YYYY-MM-DD hh:mm');
       await OauthAccessToken.create({
         id: token,
