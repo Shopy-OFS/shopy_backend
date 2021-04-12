@@ -1,6 +1,8 @@
 import { checkSchema } from 'express-validator';
+import { Op } from 'sequelize';
+import User from '../../sqlz/models/User.model';
 
-const CreateUserRequest = checkSchema({
+const UpdateUserRequest = checkSchema({
   password: {
     isLength: {
       bail: true,
@@ -25,6 +27,26 @@ const CreateUserRequest = checkSchema({
       errorMessage: 'Email should be at least 7 chars long and maximum of 100 chars',
       options: { max: 100, min: 7 },
     },
+    custom: {
+      // eslint-disable-next-line arrow-body-style
+      options: (value, { req }) => {
+        return new Promise((resolve, reject) => {
+          User.findAll({
+            where: {
+              email: {
+                [Op.eq]: value,
+              },
+              id: {
+                [Op.ne]: req.params?.id,
+              },
+            },
+          }).then((users) => {
+            // eslint-disable-next-line no-unused-expressions
+            users.length > 0 ? reject(new Error('Email already exists.')) : resolve(true);
+          });
+        });
+      },
+    },
   },
 });
-export default CreateUserRequest;
+export default UpdateUserRequest;

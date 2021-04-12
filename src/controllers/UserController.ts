@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { sendError, sendSuccess } from '../helpers/ResponseApi';
-import User from '../sqlz/models/user.model';
+import User from '../sqlz/models/User.model';
 
 const UserController = {
   async index(req: Request, res: Response) {
@@ -39,6 +39,10 @@ const UserController = {
   },
 
   async update(req: Request, res: Response) {
+    if (validationResult(req).array().length > 0) {
+      sendError(res, 400, 'Bad request', validationResult(req).array());
+      return;
+    }
     const param = {
       name: req.body.name,
       email: req.body.email,
@@ -48,6 +52,7 @@ const UserController = {
     if (user) {
       user.update(param);
       sendSuccess(res, 'update success', { user });
+      return;
     }
     sendError(res, 400, 'Not found', null);
   },

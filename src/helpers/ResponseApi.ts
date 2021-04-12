@@ -14,5 +14,4 @@ const sendError = (response: Response, httpCode: number, message: string | null,
     ...error,
   });
 
-// eslint-disable-next-line import/prefer-default-export
 export { sendSuccess, sendError };
